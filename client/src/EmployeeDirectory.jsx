@@ -18,7 +18,7 @@ function EmployeeDirectory({ token, onUnauthorized }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
-  const [showTrash, setShowTrash] = useState(false);
+  const [activeTab, setActiveTab] = useState("directory");
   const [deletedEmployees, setDeletedEmployees] = useState([]);
   const [trashLoading, setTrashLoading] = useState(false);
 
@@ -68,12 +68,9 @@ function EmployeeDirectory({ token, onUnauthorized }) {
     fetchEmployees();
   }, []);
 
-  const handleToggleTrash = () => {
-    setShowTrash((prev) => {
-      const next = !prev;
-      if (next) fetchTrash();
-      return next;
-    });
+  const handleSelectTab = (tab) => {
+    setActiveTab(tab);
+    if (tab === "trash") fetchTrash();
   };
 
   const handleRestore = async (id) => {
@@ -113,6 +110,7 @@ function EmployeeDirectory({ token, onUnauthorized }) {
       setForm(emptyForm);
       setEditingId(null);
       await fetchEmployees();
+      setActiveTab("directory");
       setError("");
     } catch (err) {
       setError(err.message);
@@ -122,6 +120,7 @@ function EmployeeDirectory({ token, onUnauthorized }) {
   };
 
   const handleEdit = (emp) => {
+    setActiveTab("add");
     setEditingId(emp._id);
     setForm({
       empId: emp.empId,
@@ -153,6 +152,37 @@ function EmployeeDirectory({ token, onUnauthorized }) {
 
   return (
     <>
+      <div className="tab-bar" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "add"}
+          className={`tab-btn${activeTab === "add" ? " active" : ""}`}
+          onClick={() => handleSelectTab("add")}
+        >
+          Add Employee
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "directory"}
+          className={`tab-btn${activeTab === "directory" ? " active" : ""}`}
+          onClick={() => handleSelectTab("directory")}
+        >
+          Employee Directory
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "trash"}
+          className={`tab-btn${activeTab === "trash" ? " active" : ""}`}
+          onClick={() => handleSelectTab("trash")}
+        >
+          Deleted Employees
+        </button>
+      </div>
+
+      {activeTab === "add" && (
       <section className="card">
         <h2>{editingId ? "Edit Employee" : "Add Employee"}</h2>
         <form className="entry-form" onSubmit={handleSubmit}>
@@ -236,14 +266,11 @@ function EmployeeDirectory({ token, onUnauthorized }) {
         </form>
         {error && <p className="error">{error}</p>}
       </section>
+      )}
 
+      {activeTab === "directory" && (
       <section className="card">
-        <div className="card-header">
-          <h2>Employee Directory</h2>
-          <button type="button" className="trash-btn" onClick={handleToggleTrash}>
-            {showTrash ? "Hide Deleted Employees" : "Deleted Employees"}
-          </button>
-        </div>
+        <h2>Employee Directory</h2>
         {loading ? (
           <p>Loading...</p>
         ) : employees.length === 0 ? (
@@ -289,47 +316,48 @@ function EmployeeDirectory({ token, onUnauthorized }) {
             </table>
           </div>
         )}
+      </section>
+      )}
 
-        {showTrash && (
-          <div className="trash-section">
-            <h3>Deleted Employees</h3>
-            {trashLoading ? (
-              <p>Loading...</p>
-            ) : deletedEmployees.length === 0 ? (
-              <p>No deleted employees.</p>
-            ) : (
-              <div className="table-scroll">
-                <table className="history-table">
-                  <thead>
-                    <tr>
-                      <th>Emp Id</th>
-                      <th>Name</th>
-                      <th>Designation</th>
-                      <th>Deleted On</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {deletedEmployees.map((emp) => (
-                      <tr key={emp._id}>
-                        <td>{emp.empId}</td>
-                        <td>{emp.empName}</td>
-                        <td>{emp.designation}</td>
-                        <td>{new Date(emp.deletedAt).toLocaleString()}</td>
-                        <td>
-                          <button className="restore-btn" onClick={() => handleRestore(emp._id)} type="button">
-                            Restore
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+      {activeTab === "trash" && (
+      <section className="card">
+        <h2>Deleted Employees</h2>
+        {trashLoading ? (
+          <p>Loading...</p>
+        ) : deletedEmployees.length === 0 ? (
+          <p>No deleted employees.</p>
+        ) : (
+          <div className="table-scroll">
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>Emp Id</th>
+                  <th>Name</th>
+                  <th>Designation</th>
+                  <th>Deleted On</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {deletedEmployees.map((emp) => (
+                  <tr key={emp._id}>
+                    <td>{emp.empId}</td>
+                    <td>{emp.empName}</td>
+                    <td>{emp.designation}</td>
+                    <td>{new Date(emp.deletedAt).toLocaleString()}</td>
+                    <td>
+                      <button className="restore-btn" onClick={() => handleRestore(emp._id)} type="button">
+                        Restore
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </section>
+      )}
     </>
   );
 }
