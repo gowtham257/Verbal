@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Walkthrough from "./Walkthrough";
 
 const emptyForm = {
   empId: "",
@@ -180,6 +181,15 @@ function EmployeeDirectory({ token, onUnauthorized }) {
         >
           Deleted Employees
         </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "walkthrough"}
+          className={`tab-btn${activeTab === "walkthrough" ? " active" : ""}`}
+          onClick={() => handleSelectTab("walkthrough")}
+        >
+          Walkthrough
+        </button>
       </div>
 
       {activeTab === "add" && (
@@ -358,6 +368,8 @@ function EmployeeDirectory({ token, onUnauthorized }) {
         )}
       </section>
       )}
+
+      {activeTab === "walkthrough" && <Walkthrough />}
     </>
   );
 }
