@@ -12,7 +12,7 @@ function ThemePicker({ theme, onChange, onReset }) {
         aria-label="Edit background and font colors"
         title="Edit background and font colors"
       >
-        🎨
+        🖌️
       </button>
 
       {open && (
