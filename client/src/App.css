@@ -251,16 +251,12 @@
 .delete-btn {
   background: none;
   border: 1px solid #999999;
-  color: #ffb4b4;
+  color: var(--text-color);
   padding: 0.3rem 0.7rem;
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.8rem;
   font-family: Arial, Helvetica, sans-serif;
-}
-
-.edit-btn {
-  color: var(--text-color);
 }
 
 .edit-btn:hover,
