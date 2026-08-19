@@ -19,7 +19,8 @@ npm install
 npm run dev   # or: node server.js
 ```
 
-**Frontend** (default port `5173`, Vite will pick the next free port if busy):
+**Frontend** (default port `5173`; Vite picks the next free port if busy —
+e.g. `http://localhost:5174`):
 
 ```
 cd client
@@ -27,8 +28,9 @@ npm install
 npm run dev
 ```
 
-Open the frontend URL printed in the terminal in your browser. The Vite dev
-server proxies `/api` requests to `http://localhost:5000`.
+Open the frontend URL printed in the terminal in your browser (for example,
+[http://localhost:5174](http://localhost:5174)). The Vite dev server proxies
+`/api` requests to `http://localhost:5000`.
 
 ## API Endpoints
 
