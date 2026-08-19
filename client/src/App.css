@@ -6,6 +6,10 @@
   color: #ffffff;
 }
 
+.header {
+  text-align: center;
+}
+
 .header h1 {
   font-size: 1.75rem;
   margin-bottom: 0.25rem;
