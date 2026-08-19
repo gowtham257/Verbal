@@ -155,6 +155,60 @@
   color: var(--text-color);
 }
 
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card-header h2 {
+  margin-top: 0;
+}
+
+.trash-btn {
+  background: transparent;
+  border: 1px solid #999999;
+  color: var(--text-color);
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  white-space: nowrap;
+}
+
+.trash-btn:hover {
+  background: #5a5a5a;
+}
+
+.trash-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #888888;
+}
+
+.trash-section h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.restore-btn {
+  background: transparent;
+  border: 1px solid #4ade80;
+  color: #86efac;
+  padding: 0.3rem 0.7rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.restore-btn:hover {
+  background: rgba(74, 222, 128, 0.15);
+}
+
 .entry-form {
   display: grid;
   grid-template-columns: 1fr 1fr;

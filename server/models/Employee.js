@@ -42,6 +42,10 @@ const employeeSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

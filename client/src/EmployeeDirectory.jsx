@@ -18,6 +18,9 @@ function EmployeeDirectory({ token, onUnauthorized }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
+  const [showTrash, setShowTrash] = useState(false);
+  const [deletedEmployees, setDeletedEmployees] = useState([]);
+  const [trashLoading, setTrashLoading] = useState(false);
 
   const authFetch = async (url, options = {}) => {
     const res = await fetch(url, {
@@ -46,9 +49,47 @@ function EmployeeDirectory({ token, onUnauthorized }) {
     }
   };
 
+  const fetchTrash = async () => {
+    try {
+      setTrashLoading(true);
+      const res = await authFetch("/api/employees/trash");
+      if (!res.ok) throw new Error("Failed to load deleted employees");
+      const data = await res.json();
+      setDeletedEmployees(data);
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setTrashLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchEmployees();
   }, []);
+
+  const handleToggleTrash = () => {
+    setShowTrash((prev) => {
+      const next = !prev;
+      if (next) fetchTrash();
+      return next;
+    });
+  };
+
+  const handleRestore = async (id) => {
+    try {
+      const res = await authFetch(`/api/employees/${id}/restore`, { method: "POST" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to restore employee");
+      }
+      setDeletedEmployees((prev) => prev.filter((emp) => emp._id !== id));
+      await fetchEmployees();
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -197,7 +238,12 @@ function EmployeeDirectory({ token, onUnauthorized }) {
       </section>
 
       <section className="card">
-        <h2>Employee Directory</h2>
+        <div className="card-header">
+          <h2>Employee Directory</h2>
+          <button type="button" className="trash-btn" onClick={handleToggleTrash}>
+            {showTrash ? "Hide Deleted Employees" : "Deleted Employees"}
+          </button>
+        </div>
         {loading ? (
           <p>Loading...</p>
         ) : employees.length === 0 ? (
@@ -241,6 +287,46 @@ function EmployeeDirectory({ token, onUnauthorized }) {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {showTrash && (
+          <div className="trash-section">
+            <h3>Deleted Employees</h3>
+            {trashLoading ? (
+              <p>Loading...</p>
+            ) : deletedEmployees.length === 0 ? (
+              <p>No deleted employees.</p>
+            ) : (
+              <div className="table-scroll">
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th>Emp Id</th>
+                      <th>Name</th>
+                      <th>Designation</th>
+                      <th>Deleted On</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {deletedEmployees.map((emp) => (
+                      <tr key={emp._id}>
+                        <td>{emp.empId}</td>
+                        <td>{emp.empName}</td>
+                        <td>{emp.designation}</td>
+                        <td>{new Date(emp.deletedAt).toLocaleString()}</td>
+                        <td>
+                          <button className="restore-btn" onClick={() => handleRestore(emp._id)} type="button">
+                            Restore
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </section>

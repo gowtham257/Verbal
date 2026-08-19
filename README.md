@@ -41,11 +41,13 @@ Open the frontend URL printed in the terminal in your browser (for example,
 | Method | Path                  | Description              |
 | ------ | ---------------------- | ------------------------ |
 | POST   | `/api/auth/login`      | Log in, returns `{ token, username }` |
-| GET    | `/api/employees`       | List all employees       |
+| GET    | `/api/employees`       | List all active employees |
+| GET    | `/api/employees/trash` | List deleted employees   |
 | GET    | `/api/employees/:id`   | Get a single employee    |
 | POST   | `/api/employees`       | Create a new employee    |
 | PUT    | `/api/employees/:id`   | Update an existing employee |
-| DELETE | `/api/employees/:id`   | Delete an employee       |
+| DELETE | `/api/employees/:id`   | Soft-delete an employee (recoverable) |
+| POST   | `/api/employees/:id/restore` | Restore a deleted employee |
 | GET    | `/api/health`          | Health check (no auth)   |
 
 ## Repository
