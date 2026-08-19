@@ -44,7 +44,9 @@ function App() {
         <p>HR tool to add and manage employee records.</p>
         {token && (
           <div className="session-bar">
-            <span>Signed in as {username}</span>
+            <button type="button" className="user-btn" disabled>
+              Signed in as {username}
+            </button>
             <div className="session-actions">
               <ThemePicker theme={theme} onChange={setTheme} onReset={() => setTheme(defaultTheme)} />
               <button type="button" onClick={handleLogout}>

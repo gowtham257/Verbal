@@ -46,6 +46,14 @@
   background: #6e6e6e;
 }
 
+.user-btn {
+  cursor: default;
+}
+
+.user-btn:hover {
+  background: #585858;
+}
+
 .session-actions {
   display: flex;
   align-items: center;
