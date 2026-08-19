@@ -1,10 +1,15 @@
+:root {
+  --bg-color: #808080;
+  --text-color: #ffffff;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #808080;
+  background: var(--bg-color);
   font-family: Arial, Helvetica, sans-serif;
-  color: #ffffff;
+  color: var(--text-color);
 }
