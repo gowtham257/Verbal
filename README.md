@@ -20,18 +20,6 @@ cp .env.example .env   # then fill in ADMIN_PASSWORD_HASH and JWT_SECRET
 npm run dev   # or: node server.js
 ```
 
-Generate `ADMIN_PASSWORD_HASH` for your chosen password:
-
-```
-node -e "console.log(require('bcryptjs').hashSync('yourpassword', 10))"
-```
-
-`JWT_SECRET` can be any random string, e.g.:
-
-```
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
 **Frontend** (default port `5173`; Vite picks the next free port if busy —
 e.g. `http://localhost:5175`):
 
