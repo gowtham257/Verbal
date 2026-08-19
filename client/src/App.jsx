@@ -45,7 +45,7 @@ function App() {
         {token && (
           <div className="session-bar">
             <button type="button" className="user-btn" disabled>
-              Signed in as {username}
+              {username}
             </button>
             <div className="session-actions">
               <ThemePicker theme={theme} onChange={setTheme} onReset={() => setTheme(defaultTheme)} />
