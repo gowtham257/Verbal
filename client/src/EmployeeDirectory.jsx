@@ -112,7 +112,7 @@ function EmployeeDirectory({ token, onUnauthorized }) {
 
   return (
     <>
-      <section className="card">
+      <section className="card add-card">
         <h2>{editingId ? "Edit Employee" : "Add Employee"}</h2>
         <form className="entry-form" onSubmit={handleSubmit}>
           <div className="field">
