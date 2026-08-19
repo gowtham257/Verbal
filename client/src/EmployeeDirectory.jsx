@@ -17,6 +17,7 @@ function EmployeeDirectory() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   const fetchEmployees = async () => {
     try {
@@ -46,8 +47,9 @@ function EmployeeDirectory() {
 
     try {
       setSaving(true);
-      const res = await fetch("/api/employees", {
-        method: "POST",
+      const isEditing = Boolean(editingId);
+      const res = await fetch(isEditing ? `/api/employees/${editingId}` : "/api/employees", {
+        method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
@@ -56,6 +58,7 @@ function EmployeeDirectory() {
         throw new Error(body.error || "Failed to save employee");
       }
       setForm(emptyForm);
+      setEditingId(null);
       await fetchEmployees();
       setError("");
     } catch (err) {
@@ -65,11 +68,31 @@ function EmployeeDirectory() {
     }
   };
 
+  const handleEdit = (emp) => {
+    setEditingId(emp._id);
+    setForm({
+      empId: emp.empId,
+      empName: emp.empName,
+      designation: emp.designation,
+      salary: emp.salary,
+      experience: emp.experience,
+      address: emp.address,
+      mobile: emp.mobile,
+      joinDate: new Date(emp.joinDate).toISOString().slice(0, 10),
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+  };
+
   const handleDelete = async (id) => {
     try {
       const res = await fetch(`/api/employees/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete employee");
       setEmployees((prev) => prev.filter((emp) => emp._id !== id));
+      if (editingId === id) handleCancelEdit();
     } catch (err) {
       setError(err.message);
     }
@@ -78,7 +101,7 @@ function EmployeeDirectory() {
   return (
     <>
       <section className="card">
-        <h2>Add Employee</h2>
+        <h2>{editingId ? "Edit Employee" : "Add Employee"}</h2>
         <form className="entry-form" onSubmit={handleSubmit}>
           <div className="field">
             <label htmlFor="empId">Emp Id</label>
@@ -147,9 +170,16 @@ function EmployeeDirectory() {
             <input id="address" type="text" value={form.address} onChange={handleChange("address")} required />
           </div>
 
-          <button type="submit" disabled={saving}>
-            {saving ? "Saving..." : "Add Employee"}
-          </button>
+          <div className="form-actions">
+            <button type="submit" disabled={saving}>
+              {saving ? "Saving..." : editingId ? "Update Employee" : "Add Employee"}
+            </button>
+            {editingId && (
+              <button type="button" onClick={handleCancelEdit} disabled={saving}>
+                Cancel
+              </button>
+            )}
+          </div>
         </form>
         {error && <p className="error">{error}</p>}
       </section>
@@ -187,7 +217,10 @@ function EmployeeDirectory() {
                     <td>{emp.mobile}</td>
                     <td>{emp.address}</td>
                     <td>{new Date(emp.joinDate).toLocaleDateString()}</td>
-                    <td>
+                    <td className="row-actions">
+                      <button className="edit-btn" onClick={() => handleEdit(emp)} type="button">
+                        Edit
+                      </button>
                       <button className="delete-btn" onClick={() => handleDelete(emp._id)} type="button">
                         Delete
                       </button>
