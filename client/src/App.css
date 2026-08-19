@@ -273,9 +273,8 @@
 
 .edit-btn,
 .delete-btn {
-  background: none;
-  border: 1px solid #999999;
-  color: var(--text-color);
+  border: none;
+  color: #ffffff;
   padding: 0.3rem 0.7rem;
   border-radius: 5px;
   cursor: pointer;
@@ -283,9 +282,20 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.edit-btn:hover,
+.edit-btn {
+  background: #2563eb;
+}
+
+.edit-btn:hover {
+  background: #1d4ed8;
+}
+
+.delete-btn {
+  background: #dc2626;
+}
+
 .delete-btn:hover {
-  background: #5a5a5a;
+  background: #b91c1c;
 }
 
 @media (max-width: 520px) {
