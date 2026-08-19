@@ -17,6 +17,57 @@
   margin-top: 0;
 }
 
+.session-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+}
+
+.session-bar button {
+  background: #585858;
+  color: #ffffff;
+  border: 1px solid #999999;
+  padding: 0.35rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.session-bar button:hover {
+  background: #6e6e6e;
+}
+
+.login-card {
+  max-width: 360px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-form button {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .card {
   background: #6e6e6e;
   border: 1px solid #888888;

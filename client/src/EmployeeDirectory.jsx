@@ -11,7 +11,7 @@ const emptyForm = {
   joinDate: "",
 };
 
-function EmployeeDirectory() {
+function EmployeeDirectory({ token, onUnauthorized }) {
   const [employees, setEmployees] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(true);
@@ -19,10 +19,22 @@ function EmployeeDirectory() {
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
 
+  const authFetch = async (url, options = {}) => {
+    const res = await fetch(url, {
+      ...options,
+      headers: { ...options.headers, Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 401) {
+      onUnauthorized();
+      throw new Error("Session expired, please sign in again");
+    }
+    return res;
+  };
+
   const fetchEmployees = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/employees");
+      const res = await authFetch("/api/employees");
       if (!res.ok) throw new Error("Failed to load employees");
       const data = await res.json();
       setEmployees(data);
@@ -48,7 +60,7 @@ function EmployeeDirectory() {
     try {
       setSaving(true);
       const isEditing = Boolean(editingId);
-      const res = await fetch(isEditing ? `/api/employees/${editingId}` : "/api/employees", {
+      const res = await authFetch(isEditing ? `/api/employees/${editingId}` : "/api/employees", {
         method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -89,7 +101,7 @@ function EmployeeDirectory() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`/api/employees/${id}`, { method: "DELETE" });
+      const res = await authFetch(`/api/employees/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete employee");
       setEmployees((prev) => prev.filter((emp) => emp._id !== id));
       if (editingId === id) handleCancelEdit();

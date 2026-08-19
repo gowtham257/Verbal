@@ -16,7 +16,20 @@ Address, Mobile, Join Date).
 ```
 cd server
 npm install
+cp .env.example .env   # then fill in ADMIN_PASSWORD_HASH and JWT_SECRET
 npm run dev   # or: node server.js
+```
+
+Generate `ADMIN_PASSWORD_HASH` for your chosen password:
+
+```
+node -e "console.log(require('bcryptjs').hashSync('yourpassword', 10))"
+```
+
+`JWT_SECRET` can be any random string, e.g.:
+
+```
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 **Frontend** (default port `5173`; Vite picks the next free port if busy —
@@ -34,16 +47,18 @@ Open the frontend URL printed in the terminal in your browser (for example,
 
 ## API Endpoints
 
-Base path: `/api/employees`
+`/api/employees` routes require a login — send the token from
+`/api/auth/login` as `Authorization: Bearer <token>`.
 
 | Method | Path                  | Description              |
 | ------ | ---------------------- | ------------------------ |
+| POST   | `/api/auth/login`      | Log in, returns `{ token, username }` |
 | GET    | `/api/employees`       | List all employees       |
 | GET    | `/api/employees/:id`   | Get a single employee    |
 | POST   | `/api/employees`       | Create a new employee    |
 | PUT    | `/api/employees/:id`   | Update an existing employee |
 | DELETE | `/api/employees/:id`   | Delete an employee       |
-| GET    | `/api/health`          | Health check              |
+| GET    | `/api/health`          | Health check (no auth)   |
 
 ## Repository
 
@@ -61,6 +76,5 @@ git push
 
 ## Possible next steps
 
-- Authentication/login for HR staff
 - Export employee directory to CSV
 - Chart of headcount over time
